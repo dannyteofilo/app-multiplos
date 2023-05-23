@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-
-import { environment } from '@env/environment';
+import { FirestoreService } from '../services/firestore.service';
 
 @Component({
   selector: 'app-about',
@@ -8,9 +7,21 @@ import { environment } from '@env/environment';
   styleUrls: ['./about.component.scss'],
 })
 export class AboutComponent implements OnInit {
-  version: string | null = environment.version;
+  savedData: {
+    inputNumber: number;
+    multiples: { colors: string[]; number: number }[];
+  }[] = [];
 
-  constructor() {}
+  constructor(private firestoreService: FirestoreService) {}
 
-  ngOnInit() {}
+  ngOnInit(): void {
+    this.firestoreService.getResults().subscribe((data) => {
+      this.savedData = data.map((item: any) => {
+        return {
+          inputNumber: item.inputNumber,
+          multiples: Object.values(item.multiples),
+        };
+      });
+    });
+  }
 }
