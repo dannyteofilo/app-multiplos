@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { finalize } from 'rxjs/operators';
-
-import { QuoteService } from './quote.service';
 
 @Component({
   selector: 'app-home',
@@ -9,22 +6,31 @@ import { QuoteService } from './quote.service';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  quote: string | undefined;
-  isLoading = false;
+  inputNumber: number = 0;
+  multiples: { number: number; colors: string[] }[] = [];
 
-  constructor(private quoteService: QuoteService) {}
+  constructor() {}
 
-  ngOnInit() {
-    this.isLoading = true;
-    this.quoteService
-      .getRandomQuote({ category: 'dev' })
-      .pipe(
-        finalize(() => {
-          this.isLoading = false;
-        })
-      )
-      .subscribe((quote: string) => {
-        this.quote = quote;
-      });
+  ngOnInit() {}
+
+  findMultiples() {
+    this.multiples = [];
+
+    for (let i = 0; i <= this.inputNumber; i++) {
+      const colors: string[] = [];
+
+      if (i % 3 === 0) {
+        colors.push('green');
+        if (i % 7 === 0) {
+          colors.push('blue');
+        }
+      } else if (i % 5 === 0) {
+        colors.push('red');
+      } else if (i % 7 === 0) {
+        colors.push('blue');
+      }
+
+      this.multiples.push({ number: i, colors: colors });
+    }
   }
 }
